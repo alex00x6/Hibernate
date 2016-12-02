@@ -34,7 +34,7 @@ public class HibernateAnnotationMain {
 	}
 
 	@Test
-	public void testSmth(){
+	public void test(){
 		System.out.println("===========все employee==========");
 		testAnnotation("from Employee1");
 		System.out.println("==========employee по имени===========");
@@ -59,7 +59,6 @@ public class HibernateAnnotationMain {
 			System.out.println(emp.getId()+" "+emp.getName()+" "+emp.getRole()+" "+emp.getInsertTime());
 		}
 		sessionFactory.getCurrentSession().close();
-
 	}
 
 }
