@@ -10,9 +10,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.testng.annotations.Test;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -22,7 +20,7 @@ public class HibernateMain {
 		Employee emp = new Employee();
 		emp.setName("Pankaj");
 		emp.setRole("CEO");
-		emp.setInsertTime(new Date());
+		emp.setInsertTime(new java.util.Date());
 		
 		//Get Session
 		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -43,11 +41,11 @@ public class HibernateMain {
 		Session session = HibernateUtil.getSessionFactory().getCurrentSession();
 		Transaction tx = session.beginTransaction();
 
-		for ( int i=0; i<10000000; i++ ) {
+		for ( int i=0; i<10; i++ ) {
 			Employee emp = new Employee();
 			emp.setName("Alexander"+ ThreadLocalRandom.current().nextInt(1, 500 + 1));
 			emp.setRole("CEO");
-			//emp.setInsertTime(new Date());
+			emp.setInsertTime(new java.util.Date());
 			session.save(emp);
 		}
 		tx.commit();
@@ -57,14 +55,18 @@ public class HibernateMain {
 
 	@Test
 	public void testCriteria(){
-		criteriaGreaterEquals("id", 1);
-
-		criteriaEmployeeConstructor(Restrictions.le("id", 1));
-		criteriaEmployeeConstructor(Restrictions.le("insertTime", dateFromString("2016-11-24")));
-		criteriaEmployeeConstructor(Restrictions.eq("name", "lisa"));
-		criteriaEmployeeConstructor(Restrictions.eq("insertTime", dateFromString("2016-11-24")));
+		//criteriaGreaterEquals("id", 1);
+		System.out.println("=================");
+		criteriaEmployeeConstructor(Restrictions.ge("id", 1));
+		System.out.println("=================");
+		criteriaEmployeeConstructor(Restrictions.ge("insertTime", Date.valueOf("2016-11-24")));
+		System.out.println("=================");
+		criteriaEmployeeConstructor(Restrictions.eq("name", "Alexander"));
+		System.out.println("=================");
+		criteriaEmployeeConstructor(Restrictions.eq("insertTime", Date.valueOf("2016-12-02")));
+		System.out.println("=================");
 		criteriaEmployeeConstructor(Restrictions
-				.between("insertTime", dateFromString("2016-11-24"), dateFromString("2016-11-29")));
+				.between("insertTime", Date.valueOf("2016-11-24"), Date.valueOf("2016-12-03")));
 
 	}
 
@@ -229,16 +231,4 @@ public class HibernateMain {
 
 		HibernateUtil.getSessionFactory().getCurrentSession().close();
 	}
-
-	private Date dateFromString(String date){
-		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-YYYY");
-		Date resultDate = null;
-		try {
-			resultDate = formatter.parse(date);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return resultDate;
-	}
-
 }
